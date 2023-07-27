@@ -5,6 +5,7 @@ import os
 
 import pytest
 from bs4 import BeautifulSoup
+from requests.exceptions import HTTPError
 
 # from requests.exceptions import HTTPError
 from spacy.tokens import Doc as SpacyDoc
@@ -55,9 +56,17 @@ class TestDigitalLibraryPage:
         # not from the page source
 
     # Exercise 5 - add test for expected exception FileNotFoundAtUrl for get_iiif_image_url() here
-    def test_get_iiif_image_url_code_500_raises_exception(self, page_url_invalid):
-        page = DigitalLibraryPage(page_url_invalid)
-        with pytest.raises(FileNotFoundAtUrl):
+    @pytest.mark.parametrize(
+        "invalid_input,expected",
+        [
+            ("https://cudl.lib.cam.ac.uk/view/MS-DAR-00100-XXXXX", FileNotFoundAtUrl),
+            ("https://cudl.lib.cam.ac.uk/view/MS-DAR-00100-XXXXX/8", FileNotFoundAtUrl),
+            ("https://cudl.lib.cam.ac.uk/view/MS-DAR-00100-00001/X", HTTPError),
+        ],
+    )
+    def test_get_iiif_image_url_code_500_raises_exception(self, invalid_input, expected):
+        page = DigitalLibraryPage(invalid_input)
+        with pytest.raises(expected):
             page.get_iiif_image_url()
 
     # Exercise 6 - refactor parameterized test for expected exceptions for get_iiif_image_url() here
