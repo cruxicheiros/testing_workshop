@@ -55,6 +55,10 @@ class TestDigitalLibraryPage:
         # not from the page source
 
     # Exercise 5 - add test for expected exception FileNotFoundAtUrl for get_iiif_image_url() here
+    def test_get_iiif_image_url_code_500_raises_exception(self, page_url_invalid):
+        page = DigitalLibraryPage(page_url_invalid)
+        with pytest.raises(FileNotFoundAtUrl):
+            page.get_iiif_image_url()
 
     # Exercise 6 - refactor parameterized test for expected exceptions for get_iiif_image_url() here
 

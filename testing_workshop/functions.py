@@ -76,9 +76,15 @@ class DigitalLibraryPage:
     def get_iiif_image_url(self):
         """Returns the IIIF social media image of the page."""
         # Exercise 2 - fill in the implementation here
-        response = requests.get(self.url)
-        soup = BeautifulSoup(response.text)
-        return soup.head.find(property="og:image")["content"]
+        image_url = requests.get(self.url)
+        soup = BeautifulSoup(image_url.text)
+        image_tag = soup.head.find(property="og:image")
+        if image_url.status_code == 200:
+            return image_tag["content"]
+        if image_url.status_code == 500:
+            raise FileNotFoundAtUrl(f"The image wasn't found at url: {self.url} Please check the URL and try again.")
+        else:
+            image_url.raise_for_status()
 
 
 class NamedEntityDocument:
