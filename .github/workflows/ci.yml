@@ -11,7 +11,7 @@ on:
     paths-ignore: ['docs/**']
 
   push:
-    branches: ['main'] # Exercise 4 - add your branch name here
+    branches: ['main', 'develop'] # Exercise 4 - add your branch name here
     paths-ignore: ['docs/**']
 
 concurrency:
